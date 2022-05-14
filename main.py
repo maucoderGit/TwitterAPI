@@ -40,7 +40,8 @@ class User(UserBase):
     birth_date: Optional[date_type] = Field(default=None)
 
 class Tweet(BaseModel):
-    pass
+    tweet_id: UUID = Field(...)
+    user_id: User
 
 # Validators
 @validator('birth_date')
