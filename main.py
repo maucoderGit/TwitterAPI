@@ -1,69 +1,105 @@
 # Python
-from uuid import UUID
-from datetime import date as date_type, datetime
-from typing import Optional
+from typing import List, Dict
 
-# Pydantic
-from pydantic import BaseModel
-from pydantic import EmailStr
-from pydantic import Field
-from pydantic import validator
+# Models
+from models import User, UserLogin, Tweet
 
 # FastAPI
+from fastapi import status
 from fastapi import FastAPI
 
 app = FastAPI()
 
-# Models
-
-class UserBase(BaseModel):
-    user_id: UUID = Field(...)
-    email: EmailStr = Field(...)
-
-class UserLogin(UserBase):
-    password: str = Field(
-        ...,
-        min_length=8
-    )
-
-class User(UserBase):
-    first_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50,
-    )
-    last_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50,
-    )
-    birth_date: Optional[date_type] = Field(default=None)
-
-class Tweet(BaseModel):
-    tweet_id: UUID = Field(...)
-    content: str = Field(
-        ...,
-        min_length=1,
-        max_length=280
-        )
-    created_at: datetime = Field(default=datetime.now())
-    update_ad: Optional[datetime] = Field(default=None)
-    tweeted_by: User = Field(...)
-
-
-# Validators
-@validator('birth_date')
-def is_over_eighteen(cls, v):
-    todays_date = date_type.today()
-    delta = todays_date - v
-
-    if delta.days/365 <= 13:
-        raise ValueError('Must be over 13!')
-    else:
-        return v
+# Path Operations
 
 @app.get(
     path='/',
     tags=['Home'])
-def home():
+def home() -> Dict[str, str]:
+    """
+    Home Route
+
+    Show a message explaining if Twitter API is working
+
+    Parameters:
+    - None
+
+    Returns JSON key: 'Twitter API' and JSON value: 'Working'
+    """
     return {'Twitter API': 'Working'}
+
+## Users
+
+@app.post(
+    path='auth/singup',
+    response_model=User,
+    status_code=status.HTTP_201_CREATED,
+    summary='Register a user',
+    tags=['Auth', 'users']
+)
+def singup(
+
+):
+    pass
+
+@app.post(
+    path='auth/login',
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary='Login a user',
+    tags=['Auth', 'users']
+)
+def login(
+    
+):
+    pass
+
+@app.get(
+    path='/users',
+    response_model=List[User],
+    status_code=status.HTTP_200_OK,
+    summary='Show all user',
+    tags=['users']
+)
+def show_all_users(
+    
+):
+    pass
+
+@app.get(
+    path='/users/{user_id}',
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary='Show a user',
+    tags=['users']
+)
+def show_a_users(
+    
+):
+    pass
+
+@app.delete(
+    path='/users/{user_id}/delete',
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary='Delete a user',
+    tags=['users']
+)
+def delete_a_user(
+    
+):
+    pass
+
+@app.put(
+    path='/users/{user_id}/update',
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary='Update a user',
+    tags=['users']
+)
+def Update_a_user(
+    
+):
+    pass
+
+## Tweets
