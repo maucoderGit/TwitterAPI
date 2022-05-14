@@ -1,6 +1,6 @@
 # Python
 from uuid import UUID
-from datetime import date as date_type
+from datetime import date as date_type, datetime
 from typing import Optional
 
 # Pydantic
@@ -41,7 +41,15 @@ class User(UserBase):
 
 class Tweet(BaseModel):
     tweet_id: UUID = Field(...)
-    user_id: User
+    content: str = Field(
+        ...,
+        min_length=1,
+        max_length=280
+        )
+    created_at: datetime = Field(default=datetime.now())
+    update_ad: Optional[datetime] = Field(default=None)
+    tweeted_by: User = Field(...)
+
 
 # Validators
 @validator('birth_date')
