@@ -2,6 +2,7 @@
 import json
 from typing import List, Dict
 from uuid import UUID
+from xxlimited import Str
 
 # Models
 from models import User, UserLogin, Tweet, UserRegister
@@ -258,6 +259,8 @@ def Update_a_user(
 
                 users[index] = user
 
+                json.dump(users, f)
+
                 return users[index]
 
         raise HTTPException(
@@ -298,21 +301,21 @@ def post(
         - updated_at: Optional[datetime]
         - by: User 
     """
-    with open("tweets.json", "r+", encoding="utf-8") as f:
+    with open('tweets.json', 'r+', encoding='utf-8') as f:
         results = json.load(f)
         
         tweet_dict = tweet.dict()
         
         # Tweets
-        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"])
-        tweet_dict["created_at"] = str(tweet_dict["created_at"])
+        tweet_dict['tweet_id'] = str(tweet_dict['tweet_id'])
+        tweet_dict['created_at'] = str(tweet_dict['created_at'])
         
-        if tweet_dict["updated_at"]:
-            tweet_dict["updated_at"] = str(tweet_dict["updated_at"])
+        if tweet_dict['updated_at']:
+            tweet_dict['updated_at'] = str(tweet_dict['updated_at'])
         
         # Users
-        tweet_dict["by"]["user_id"] = str(tweet_dict["by"]["user_id"])
-        tweet_dict["by"]["birth_date"] = str(tweet_dict["by"]["birth_date"])
+        tweet_dict['by']['user_id'] = str(tweet_dict['by']['user_id'])
+        tweet_dict['by']['birth_date'] = str(tweet_dict['by']['birth_date'])
         
         results.append(tweet_dict)
         f.seek(0)
@@ -465,5 +468,59 @@ def delete_a_tweet(
     summary='Update a tweet',
     tags=['Tweets']
 )
-def update_a_tweet():
-    pass
+def update_a_tweet(
+    tweet_id: UUID = Path(
+        ...,
+        title='Tweet ID',
+        description='Gets the tweet ID'
+    ),
+    tweet: Tweet = Body(
+        ...,
+        title='Tweet Information',
+        description='Basic information to update'
+    )
+):
+    """
+    Update a Tweet
+
+    New functionality in Twitter app
+
+    Parameters:
+    - Request Body:
+        - tweet_id: UUID
+        - Tweet: tweet
+
+    Returns the updated tweet.
+    """
+    with open('tweets.json', 'r+', encoding='utf-8') as f:
+        tweets: List[Dict] = json.load(f)
+
+        for i in tweets:
+            if i['tweet_id'] == str(tweet_id):
+                tweets.remove(i)
+        
+                tweet_dict = tweet.dict()
+        
+                # Tweets
+                tweet_dict['tweet_id'] = str(tweet_dict['tweet_id'])
+                tweet_dict['created_at'] = str(tweet_dict['created_at'])
+                
+                if tweet_dict['updated_at']:
+                    tweet_dict['updated_at'] = str(tweet_dict['updated_at'])
+                
+                # Users
+                tweet_dict['by']['user_id'] = str(tweet_dict['by']['user_id'])
+                tweet_dict['by']['birth_date'] = str(tweet_dict['by']['birth_date'])
+                
+                tweets.append(tweet_dict)
+                
+                with open("tweets.json", "w", encoding="utf-8") as f:
+                    f.seek(0)
+                    json.dump(tweets, f)
+
+                return tweet
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='USER ID NOT FOUND'
+        )
