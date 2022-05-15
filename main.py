@@ -1,13 +1,14 @@
 # Python
-from email.policy import HTTP
+import json
 from typing import List, Dict
 
 # Models
-from models import User, UserLogin, Tweet
+from models import User, UserLogin, Tweet, UserRegister
 
 # FastAPI
 from fastapi import status
 from fastapi import FastAPI
+from fastapi import Body
 
 app = FastAPI()
 
@@ -17,14 +18,14 @@ app = FastAPI()
 
 ### Register a user
 @app.post(
-    path='auth/singup',
+    path='/auth/singup',
     response_model=User,
     status_code=status.HTTP_201_CREATED,
     summary='Register a user',
     tags=['Auth', 'users']
 )
 def singup(
-
+    user: UserRegister = Body(...)
 ):
     """
     Singup a user
@@ -33,7 +34,7 @@ def singup(
 
     Parameters:
     - Request Body Parameters:
-        - user: UserLogin
+        - user: UserRegister
     
     Returns a JSON with the basic user information:
         - user_id: UUID
@@ -42,7 +43,19 @@ def singup(
         - last_name: str
         - birth_date: date_type
     """
-    pass
+    with open('users.json', 'r+', encoding='utf-8') as f:
+        results: str = json.load(f)
+        
+        user_dict = dict(user)
+        user_dict['user_id'] = str(user_dict['user_id'])
+        user_dict['birth_date'] = str(user_dict['birth_date'])
+        
+        results.append(user_dict)
+        
+        f.seek(0)
+        json.dump(results, f)
+
+        return user
 
 
 ### Login a User
