@@ -26,6 +26,22 @@ app = FastAPI()
 def singup(
 
 ):
+    """
+    Singup a user
+
+    This Path operation register a user in Twitter app
+
+    Parameters:
+    - Request Body Parameters:
+        - user: UserLogin
+    
+    Returns a JSON with the basic user information:
+        - user_id: UUID
+        - email: EmailStr
+        - first_name: str
+        - last_name: str
+        - birth_date: date_type
+    """
     pass
 
 
