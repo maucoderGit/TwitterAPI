@@ -45,8 +45,8 @@ class Tweet(BaseModel):
     content: str = Field(
         ...,
         min_length=1,
-        max_length=280
-        )
+        max_length=256
+    )
     created_at: datetime = Field(default=datetime.now())
-    update_ad: Optional[datetime] = Field(default=None)
-    tweeted_by: User = Field(...)
+    updated_at: Optional[datetime] = Field(default=None)
+    by: User = Field(...)

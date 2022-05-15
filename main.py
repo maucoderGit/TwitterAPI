@@ -37,6 +37,7 @@ def singup(
         - user: UserRegister
     
     Returns a JSON with the basic user information:
+    - model:
         - user_id: UUID
         - email: EmailStr
         - first_name: str
@@ -44,7 +45,7 @@ def singup(
         - birth_date: date_type
     """
     with open('users.json', 'r+', encoding='utf-8') as f:
-        results: str = json.load(f)
+        results = json.load(f)
         
         user_dict = dict(user)
         user_dict['user_id'] = str(user_dict['user_id'])
@@ -158,8 +159,49 @@ def Update_a_user(
     summary='Post a tweet',
     tags=['Tweets']
 )
-def post():
-    pass
+def post(
+    tweet: Tweet = Body(
+        ...
+    )
+):
+    """
+    Post Tweets
+
+    This Path operation upload a tweet in Twitter app
+
+    Parameters:
+    - Request Body Parameters:
+        - tweet: Tweet
+    
+    Returns a JSON with the basic tweet information:
+    - model:
+        - tweet_id: UUID
+        - content: str
+        - created_at: datetime
+        - updated_at: Optional[datetime]
+        - by: User 
+    """
+    with open("tweets.json", "r+", encoding="utf-8") as f:
+        results = json.load(f)
+        
+        tweet_dict = tweet.dict()
+        
+        # Tweets
+        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"])
+        tweet_dict["created_at"] = str(tweet_dict["created_at"])
+        
+        if tweet_dict["updated_at"]:
+            tweet_dict["updated_at"] = str(tweet_dict["updated_at"])
+        
+        # Users
+        tweet_dict["by"]["user_id"] = str(tweet_dict["by"]["user_id"])
+        tweet_dict["by"]["birth_date"] = str(tweet_dict["by"]["birth_date"])
+        
+        results.append(tweet_dict)
+        f.seek(0)
+        json.dump(results, f)
+        
+        return tweet
 
 
 ### Show all tweets
@@ -169,18 +211,24 @@ def post():
     status_code=status.HTTP_200_OK,
     summary='Show all tweets',
     tags=['Tweets','Home'])
-def home() -> Dict[str, str]:
+def home(
+
+) -> Dict[str, str]:
     """
     Home Route
 
-    Show a message explaining if Twitter API is working
+    Show all Tweets in Twitter app
 
     Parameters:
     - None
 
-    Returns JSON key: 'Twitter API' and JSON value: 'Working'
+    Returns all tweets posted in Twitter app
     """
-    return {'Twitter API': 'Working'}
+    with open('tweets.json', 'r', encoding='utf-8') as f:
+        results = json.load(f)
+
+        return results
+
 
 
 ### Show a Tweet

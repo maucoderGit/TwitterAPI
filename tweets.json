@@ -1,1 +1,28 @@
-[]
+[
+    {
+        "tweet_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "content": "string",
+        "created_at": "2022-05-15 11:54:48.374175",
+        "updated_at": "2022-05-15 15:56:27.224000+00:00",
+        "by": {
+            "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "first_name": "string",
+            "last_name": "string",
+            "birth_date": "2022-05-15"
+        }
+    },
+    {
+        "tweet_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "content": "I was trying to use my code and I were putting the incorrect button, It feels like I was reading a book upside down",
+        "created_at": "2022-05-15 11:54:48.374175",
+        "updated_at": "2022-05-15 15:56:27.224000+00:00",
+        "by": {
+            "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "mau@example.com",
+            "first_name": "Mauricio",
+            "last_name": "Gonzalez",
+            "birth_date": "2002-05-15"
+        }
+    }
+]
