@@ -10,6 +10,7 @@ from models import User, UserLogin, Tweet, UserRegister
 # FastAPI
 from fastapi import status, HTTPException
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
 from fastapi import Body, Path
 
 app = FastAPI()
@@ -49,11 +50,11 @@ def singup(
     with open('users.json', 'r+', encoding='utf-8') as f:
         results = json.load(f)
         
-        user_dict = dict(user)
-        user_dict['user_id'] = str(user_dict['user_id'])
-        user_dict['birth_date'] = str(user_dict['birth_date'])
+#        user_dict = dict(user)
+#        user_dict['user_id'] = str(user_dict['user_id'])
+#        user_dict['birth_date'] = str(user_dict['birth_date'])
         
-        results.append(user_dict)
+        results.append(jsonable_encoder(user))
         
         f.seek(0)
         json.dump(results, f)
@@ -251,17 +252,20 @@ def Update_a_user(
 
         for i in users:
             if i['user_id'] == str(user_id):
-                index = users.index(i)
+                users.remove(i)
+
+#                user['user_id'] = str(user['user_id'])
+#                user['birth_date'] = str(user['birth_date'])
+
+                user = jsonable_encoder(user)
+
+                users.append(jsonable_encoder(user))
                 
-                user = dict(user)
-                user['user_id'] = str(user['user_id'])
-                user['birth_date'] = str(user['birth_date'])
+                with open("tweets.json", "w", encoding="utf-8") as f:
+                    f.seek(0)
+                    json.dump(users, f)
 
-                users[index] = user
-
-                json.dump(users, f)
-
-                return users[index]
+                return user
 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -307,17 +311,18 @@ def post(
         tweet_dict = tweet.dict()
         
         # Tweets
-        tweet_dict['tweet_id'] = str(tweet_dict['tweet_id'])
-        tweet_dict['created_at'] = str(tweet_dict['created_at'])
+#        tweet_dict['tweet_id'] = str(tweet_dict['tweet_id'])
+#        tweet_dict['created_at'] = str(tweet_dict['created_at'])
+#        
+#        if tweet_dict['updated_at']:
+#            tweet_dict['updated_at'] = str(tweet_dict['updated_at'])
+#        
+#        # Users
+#        tweet_dict['by']['user_id'] = str(tweet_dict['by']['user_id'])
+#        tweet_dict['by']['birth_date'] = str(tweet_dict['by']['birth_date'])
         
-        if tweet_dict['updated_at']:
-            tweet_dict['updated_at'] = str(tweet_dict['updated_at'])
-        
-        # Users
-        tweet_dict['by']['user_id'] = str(tweet_dict['by']['user_id'])
-        tweet_dict['by']['birth_date'] = str(tweet_dict['by']['birth_date'])
-        
-        results.append(tweet_dict)
+        results.append(jsonable_encoder(tweet_dict))
+
         f.seek(0)
         json.dump(results, f)
         
@@ -502,17 +507,17 @@ def update_a_tweet(
                 tweet_dict = tweet.dict()
         
                 # Tweets
-                tweet_dict['tweet_id'] = str(tweet_dict['tweet_id'])
-                tweet_dict['created_at'] = str(tweet_dict['created_at'])
-                
-                if tweet_dict['updated_at']:
-                    tweet_dict['updated_at'] = str(tweet_dict['updated_at'])
-                
-                # Users
-                tweet_dict['by']['user_id'] = str(tweet_dict['by']['user_id'])
-                tweet_dict['by']['birth_date'] = str(tweet_dict['by']['birth_date'])
-                
-                tweets.append(tweet_dict)
+#                tweet_dict['tweet_id'] = str(tweet_dict['tweet_id'])
+#                tweet_dict['created_at'] = str(tweet_dict['created_at'])
+#                
+#                if tweet_dict['updated_at']:
+#                    tweet_dict['updated_at'] = str(tweet_dict['updated_at'])
+#                
+#                # Users
+#                tweet_dict['by']['user_id'] = str(tweet_dict['by']['user_id'])
+#                tweet_dict['by']['birth_date'] = str(tweet_dict['by']['birth_date'])
+
+                tweets.append(jsonable_encoder(tweet_dict))
                 
                 with open("tweets.json", "w", encoding="utf-8") as f:
                     f.seek(0)
