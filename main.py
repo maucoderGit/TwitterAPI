@@ -332,7 +332,6 @@ def post(
 ### Show all tweets
 @app.get(
     path='/',
-    response_model=List[Tweet],
     status_code=status.HTTP_200_OK,
     summary='Show all tweets',
     tags=['Tweets','Home'])
