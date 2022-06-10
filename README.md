@@ -1,9 +1,6 @@
 # Twitter API clone with FastAPI
 
 What does it mean?
-# Twitter API clone with FastAPI
-
-What does it mean?
 
 Using FastAPI, I clone the Twitter API service using the CRUD model:
 
