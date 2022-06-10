@@ -39,5 +39,5 @@ INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 
 The easier way to use an API developed with FastAPI is to use interactive documentation.
 
-The URL is http://127.0.0.1:8000/docs or http:localhost:8000/docs.
+The URL is http://127.0.0.1:8000/docs or http://localhost:8000/docs.
 Using this, you can test by yourself the documented API.
